@@ -53,6 +53,9 @@ public class launch {
     }
 
     private static boolean isValidJavaPath(String javaPath) {
+        if (javaPath == null) {
+            return false;
+        }
         File file = new File(javaPath);
         return file.exists();
     }
