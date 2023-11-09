@@ -1,8 +1,10 @@
+package mushishi;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
+import mushishi.javaStart;
 
 public class launch {
 
@@ -113,6 +115,7 @@ public class launch {
             writer.close();
             scanner.close();
             displayVariables(javaPath, memory, user);
+            
         } catch (IOException e) {
             e.printStackTrace();
         }
