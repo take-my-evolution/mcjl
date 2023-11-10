@@ -2,16 +2,18 @@ package application;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextField;
 
 public class SampleController {
 
     @FXML
-    private Button Button1;
+    private ProgressBar Validating;
 
     @FXML
-    void Pressed(KeyEvent event) {
-    	Button1.relocate(30, 30);
-    }
+    private Button startGame;
+
+    @FXML
+    private TextField userName;
 
 }
