@@ -10,6 +10,11 @@ public class Instance {
 	{
 		instanceName = name;
 	}
+
+
+	   public String getInstanceName() {
+	   return instanceName;
+	}
 	
 	
 	
