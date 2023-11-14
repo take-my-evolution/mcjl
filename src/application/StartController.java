@@ -1,15 +1,22 @@
 package application;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.util.converter.IntegerStringConverter;
 
+public class StartController implements Initializable {
+    @FXML
+    private ComboBox<String> comb;
 
-public class StartController {
 
     @FXML
     private ProgressBar Validating;
@@ -27,7 +34,7 @@ public class StartController {
     private Button btnDelete;
 
     @FXML
-    private Button btnSettings;
+    private Button btnJPath;
 
     @FXML
     private Button btnStart;
@@ -46,34 +53,19 @@ public class StartController {
 
     @FXML
     private TextField fldUser;
-    
-    @FXML
-    private ComboBox<> instances;
-    
-    @FXML
-    void initialize() {
-        TextFormatter<Integer> textFormatter = new TextFormatter<>(new IntegerStringConverter(), 0,
-                c -> {
-                    if (c.isContentChange()) {
-                        String newText = c.getControlNewText();
-                        if (newText.matches("\\d*")) {
-                            return c;
-                        } else {
-                            return null; 
-                        }
-                    }
-                    return c;
-                });
 
-        fldMemory.setTextFormatter(textFormatter);
-    }
-    
     @FXML
-    void CreateButtonClick(ActionEvent event) {
-    	Instance instance = new Instance("sdsd");
-    	
-    	
-    	int a = 02;
+    private ComboBox<String> instnse;
+
+    @FXML
+    void Select(ActionEvent event) {
+        String s = instnse.getSelectionModel().getSelectedItem().toString();
+
     }
-    
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        ObservableList<String> list = FXCollections.observableArrayList("JavaFX","SceneBuilder","Laravel","Python");
+        instnse.setItems(list);
+    }
 }

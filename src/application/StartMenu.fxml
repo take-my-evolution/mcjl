@@ -14,7 +14,8 @@
       <Button fx:id="btnStart" layoutX="450.0" layoutY="17.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="104.0" text="Start Game" />
       <ProgressBar fx:id="Validating" layoutX="353.0" layoutY="83.0" prefHeight="20.0" prefWidth="201.0" progress="0.0" />
       <Label layoutX="280.0" layoutY="84.0" text="Validation:" />
-      <Button fx:id="btnCreate" layoutX="21.0" layoutY="17.0" mnemonicParsing="false" onAction="#CreateButtonClick" text="Create " />
+      <ComboBox fx:id="instnse" accessibleRole="CONTEXT_MENU" editable="true" layoutX="92.0" layoutY="17.0" onAction="#Select" prefHeight="23.0" prefWidth="165.0" />
+      <Button fx:id="btnCreate" layoutX="21.0" layoutY="17.0" mnemonicParsing="false" text="Create " />
       <Button fx:id="btnDelete" layoutX="264.0" layoutY="17.0" mnemonicParsing="false" text="Delete" />
       <Label layoutX="21.0" layoutY="84.0" text="User name:" />
       <Label layoutX="21.0" layoutY="118.0" text="Memory:" />
@@ -31,6 +32,5 @@
       <Button fx:id="btnDel_mod" layoutX="447.0" layoutY="294.0" mnemonicParsing="false" text="Delete" />
       <CheckBox layoutX="264.0" layoutY="223.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="104.0" text="Synch mods" />
       <Button fx:id="btnJPath" layoutX="264.0" layoutY="148.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="29.0" text="..." />
-      <ComboBox fx:id="instances" editable="true" layoutX="102.0" layoutY="17.0" prefWidth="150.0" visibleRowCount="0"/>
    </children>
 </AnchorPane>
