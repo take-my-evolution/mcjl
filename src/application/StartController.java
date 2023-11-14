@@ -4,12 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
-import javafx.stage.Stage;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-
-import java.io.IOException;
+import javafx.scene.control.TextField;
 
 public class StartController {
 
@@ -17,7 +12,13 @@ public class StartController {
     private ProgressBar Validating;
 
     @FXML
+    private Button btnAdd_mod;
+
+    @FXML
     private Button btnCreate;
+
+    @FXML
+    private Button btnDel_mod;
 
     @FXML
     private Button btnDelete;
@@ -28,33 +29,24 @@ public class StartController {
     @FXML
     private Button btnStart;
 
-    // Добавляем ссылку на Stage
-    private Stage primaryStage;
+    @FXML
+    private TextField fldJarg;
 
-    // Метод для установки Stage
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
+    @FXML
+    private TextField fldJpath;
+
+    @FXML
+    private TextField fldMemory;
+
+    @FXML
+    private TextField fldServer;
+
+    @FXML
+    private TextField fldUser;
 
     @FXML
     void clcSettings(ActionEvent event) {
-        try {
-            // Загружаем fxml файл
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("Settings.fxml"));
-            Parent root = loader.load();
 
-            // Создаем новый Stage
-            Stage settingsStage = new Stage();
-            settingsStage.setTitle("Settings");
-            settingsStage.setScene(new Scene(root));
-
-            // Устанавливаем Stage, чтобы он мог быть закрыт в будущем
-            ((SettingsController)loader.getController()).setSettingsStage(settingsStage);
-
-            // Показываем новое окно
-            settingsStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
+
 }
