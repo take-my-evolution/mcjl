@@ -5,6 +5,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
+import javafx.util.converter.IntegerStringConverter;
+
 
 public class StartController {
 
@@ -43,10 +46,34 @@ public class StartController {
 
     @FXML
     private TextField fldUser;
-
+    
     @FXML
-    void clcSettings(ActionEvent event) {
+    private ComboBox<> instances;
+    
+    @FXML
+    void initialize() {
+        TextFormatter<Integer> textFormatter = new TextFormatter<>(new IntegerStringConverter(), 0,
+                c -> {
+                    if (c.isContentChange()) {
+                        String newText = c.getControlNewText();
+                        if (newText.matches("\\d*")) {
+                            return c;
+                        } else {
+                            return null; 
+                        }
+                    }
+                    return c;
+                });
 
+        fldMemory.setTextFormatter(textFormatter);
     }
-
+    
+    @FXML
+    void CreateButtonClick(ActionEvent event) {
+    	Instance instance = new Instance("sdsd");
+    	
+    	
+    	int a = 02;
+    }
+    
 }
