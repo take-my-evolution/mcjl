@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import application.Instance;
 
 
 public class StartController implements Initializable {
@@ -57,7 +58,6 @@ public class StartController implements Initializable {
     private ObservableList<Instance> instancesList = FXCollections.observableArrayList();
     @FXML
     void Select(ActionEvent event) {
-        String s = instnse.getSelectionModel().getSelectedItem().toString();
 
     }
 
