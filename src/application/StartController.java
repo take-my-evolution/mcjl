@@ -69,8 +69,6 @@ public class StartController implements Initializable {
 
     @FXML
     void onSelect(ActionEvent event) {
-        String selectedInstanceName = instnse.getSelectionModel().getSelectedItem();
-        // Можно здесь добавить дополнительную логику при выборе элемента в ComboBox
     }
 
     @FXML
