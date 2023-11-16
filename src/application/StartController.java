@@ -65,10 +65,31 @@ public class StartController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         ObservableList<String> list = FXCollections.observableArrayList();
         instnse.setItems(list);
+        
+        // Обновление значения поля fldUser при изменении выбранного элемента в ComboBox
+        instnse.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                Instance selectedInstance = instancesList.stream().filter(instance -> instance.getInstanceName().equals(newValue)).findFirst().orElse(null);
+                
+                if (selectedInstance != null) {
+                    fldUser.setText(selectedInstance.getConfig().getUser());
+                }
+            }
+        });
     }
 
     @FXML
     void onSelect(ActionEvent event) {
+        String selectedInstanceName = instnse.getSelectionModel().getSelectedItem();
+
+        if (selectedInstanceName != null) {
+            Instance selectedInstance = instancesList.stream().filter(instance -> instance.getInstanceName().equals(selectedInstanceName)).findFirst().orElse(null);
+            
+            if (selectedInstance != null) {
+                String username = fldUser.getText().trim();
+                selectedInstance.getConfig().setUser(username);
+            }
+        }
     }
 
     @FXML
@@ -79,7 +100,16 @@ public class StartController implements Initializable {
             // Проверяем, что объект с таким именем еще не создан
             if (instancesList.stream().noneMatch(instance -> instance.getInstanceName().equals(instanceName))) {
                 Instance newInstance = new Instance(instanceName);
+                
+                // Заполняем переменные класса Config через instance_name
+                Config newConfig = new Config();
+                newConfig.setInstance_name(instanceName);
+                
+                // Добавляем новую конфигурацию в список instancesList
+                newInstance.setConfig(newConfig);
                 instancesList.add(newInstance);
+                
+                // Добавляем instanceName в ComboBox
                 instnse.getItems().add(instanceName);
             } else {
                 // Обработка ошибки, если объект с таким именем уже существует
@@ -96,12 +126,31 @@ public class StartController implements Initializable {
         String selectedInstanceName = instnse.getSelectionModel().getSelectedItem();
 
         if (selectedInstanceName != null) {
-            instancesList.removeIf(instance -> instance.getInstanceName().equals(selectedInstanceName));
-            instnse.getItems().remove(selectedInstanceName);
-            instnse.getSelectionModel().clearSelection();
+            Instance selectedInstance = instancesList.stream().filter(instance -> instance.getInstanceName().equals(selectedInstanceName)).findFirst().orElse(null);
+            
+            if (selectedInstance != null) {
+                instancesList.remove(selectedInstance);
+                instnse.getItems().remove(selectedInstanceName);
+                instnse.getSelectionModel().clearSelection();
+            }
         } else {
             // Обработка ошибки, если не выбран элемент для удаления
             System.out.println("Выберите объект для удаления!");
+        }
+    }
+    @FXML
+    void onStart(ActionEvent event) {
+        String selectedInstanceName = instnse.getSelectionModel().getSelectedItem();
+
+        if (selectedInstanceName != null) {
+            Instance selectedInstance = instancesList.stream()
+                    .filter(instance -> instance.getInstanceName().equals(selectedInstanceName))
+                    .findFirst().orElse(null);
+
+            if (selectedInstance != null) {
+                String username = fldUser.getText().trim();
+                selectedInstance.getConfig().setUser(username);
+            }
         }
     }
 }

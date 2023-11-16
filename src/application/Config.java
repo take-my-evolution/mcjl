@@ -6,16 +6,26 @@ import java.io.Serializable;
 public class Config implements Serializable {
     private static final long serialVersionUID = 1L;
     
+    private String instance_name;
 	private String java_path;
     private int memory;
     private String user;
 
     public Config(){
-        this.java_path = "";
+        this.instance_name ="";
+    	this.java_path = "";
         this.memory = 0;
         this.user = "";
     }
 
+    public String getInstance_name() {
+        return instance_name;
+    }
+
+    public void setInstance_name(String java_path) {
+        this.instance_name = java_path;
+    }
+    
     public String getJavaPath() {
         return java_path;
     }

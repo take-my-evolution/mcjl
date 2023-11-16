@@ -11,12 +11,12 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="569.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.StartController">
    <children>
-      <Button fx:id="btnStart" layoutX="450.0" layoutY="17.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="104.0" text="Start Game" />
+      <Button fx:id="btnStart" layoutX="450.0" layoutY="17.0" mnemonicParsing="false" onAction="#onStart" prefHeight="23.0" prefWidth="104.0" text="Start Game" />
       <ProgressBar fx:id="Validating" layoutX="353.0" layoutY="83.0" prefHeight="20.0" prefWidth="201.0" progress="0.0" />
       <Label layoutX="280.0" layoutY="84.0" text="Validation:" />
       <ComboBox fx:id="instnse" accessibleRole="CONTEXT_MENU" editable="true" layoutX="92.0" layoutY="17.0" onAction="#Select" prefHeight="23.0" prefWidth="165.0" />
-      <Button fx:id="btnCreate"  onAction="#onCreate"  layoutX="21.0" layoutY="17.0" mnemonicParsing="false" text="Create " />
-      <Button fx:id="btnDelete" onAction="#onDelete"  layoutX="264.0" layoutY="17.0" mnemonicParsing="false" text="Delete" />
+      <Button fx:id="btnCreate" layoutX="21.0" layoutY="17.0" mnemonicParsing="false" onAction="#onCreate" text="Create " />
+      <Button fx:id="btnDelete" layoutX="264.0" layoutY="17.0" mnemonicParsing="false" onAction="#onDelete" text="Delete" />
       <Label layoutX="21.0" layoutY="84.0" text="User name:" />
       <Label layoutX="21.0" layoutY="118.0" text="Memory:" />
       <Label layoutX="21.0" layoutY="151.0" text="Java path:" />
