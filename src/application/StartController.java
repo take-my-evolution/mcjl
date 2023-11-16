@@ -66,18 +66,21 @@ public class StartController implements Initializable {
         ObservableList<String> list = FXCollections.observableArrayList();
         instnse.setItems(list);
         
-        // Обновление значения поля fldUser при изменении выбранного элемента в ComboBox
+        // Обновление значения полей fldUser, fldJpath, fldMemory, fldServer, fldJarg при изменении выбранного элемента в ComboBox
         instnse.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 Instance selectedInstance = instancesList.stream().filter(instance -> instance.getInstanceName().equals(newValue)).findFirst().orElse(null);
                 
                 if (selectedInstance != null) {
                     fldUser.setText(selectedInstance.getConfig().getUser());
+                    fldJpath.setText(selectedInstance.getConfig().getJavaPath());
+                    fldMemory.setText(String.valueOf(selectedInstance.getConfig().getMemory()));
+                    fldServer.setText(selectedInstance.getConfig().getServer());
+                    fldJarg.setText(selectedInstance.getConfig().getArguments());
                 }
             }
         });
     }
-
     @FXML
     void onSelect(ActionEvent event) {
         String selectedInstanceName = instnse.getSelectionModel().getSelectedItem();
@@ -148,8 +151,18 @@ public class StartController implements Initializable {
                     .findFirst().orElse(null);
 
             if (selectedInstance != null) {
+                String javaPath = fldJpath.getText().trim();
+                int memory = Integer.parseInt(fldMemory.getText().trim());
+                String server = fldServer.getText().trim();
+                String arguments = fldJarg.getText().trim();
                 String username = fldUser.getText().trim();
-                selectedInstance.getConfig().setUser(username);
+
+                Config config = selectedInstance.getConfig();
+                config.setUser(username);
+                config.setJavaPath(javaPath);
+                config.setMemory(memory);
+                config.setServer(server);
+                config.setArguments(arguments);
             }
         }
     }

@@ -8,12 +8,16 @@ public class Config implements Serializable {
     
     private String instance_name;
 	private String java_path;
+	private String server;
+	private String arguments;
     private int memory;
     private String user;
 
     public Config(){
         this.instance_name ="";
     	this.java_path = "";
+    	this.arguments = "";
+    	this.server = "";
         this.memory = 0;
         this.user = "";
     }
@@ -48,6 +52,21 @@ public class Config implements Serializable {
 
     public void setUser(String user) {
         this.user = user;
+    }
+    public String getServer() {
+        return server;
+    }
+
+    public void setServer(String server) {
+        this.server = server;
+    }
+
+    public String getArguments() {
+        return arguments;
+    }
+
+    public void setArguments(String arguments) {
+        this.arguments = arguments;
     }
 
     public void serialize(String filePath) {
