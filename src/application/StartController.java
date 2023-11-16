@@ -1,15 +1,20 @@
 package application;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.util.converter.IntegerStringConverter;
+import application.Instance;
 
 
-public class StartController {
+public class StartController implements Initializable {
 
     @FXML
     private ProgressBar Validating;
@@ -27,7 +32,7 @@ public class StartController {
     private Button btnDelete;
 
     @FXML
-    private Button btnSettings;
+    private Button btnJPath;
 
     @FXML
     private Button btnStart;
@@ -46,34 +51,119 @@ public class StartController {
 
     @FXML
     private TextField fldUser;
-    
-    @FXML
-    private ComboBox<> instances;
-    
-    @FXML
-    void initialize() {
-        TextFormatter<Integer> textFormatter = new TextFormatter<>(new IntegerStringConverter(), 0,
-                c -> {
-                    if (c.isContentChange()) {
-                        String newText = c.getControlNewText();
-                        if (newText.matches("\\d*")) {
-                            return c;
-                        } else {
-                            return null; 
-                        }
-                    }
-                    return c;
-                });
 
-        fldMemory.setTextFormatter(textFormatter);
-    }
-    
     @FXML
-    void CreateButtonClick(ActionEvent event) {
-    	Instance instance = new Instance("sdsd");
-    	
-    	
-    	int a = 02;
+    private ComboBox<String> instnse;
+
+    private ObservableList<Instance> instancesList = FXCollections.observableArrayList();
+    @FXML
+    void Select(ActionEvent event) {
+
     }
-    
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        ObservableList<String> list = FXCollections.observableArrayList();
+        instnse.setItems(list);
+        
+        // Обновление значения полей fldUser, fldJpath, fldMemory, fldServer, fldJarg при изменении выбранного элемента в ComboBox
+        instnse.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                Instance selectedInstance = instancesList.stream().filter(instance -> instance.getInstanceName().equals(newValue)).findFirst().orElse(null);
+                
+                if (selectedInstance != null) {
+                    fldUser.setText(selectedInstance.getConfig().getUser());
+                    fldJpath.setText(selectedInstance.getConfig().getJavaPath());
+                    fldMemory.setText(String.valueOf(selectedInstance.getConfig().getMemory()));
+                    fldServer.setText(selectedInstance.getConfig().getServer());
+                    fldJarg.setText(selectedInstance.getConfig().getArguments());
+                }
+            }
+        });
+    }
+    @FXML
+    void onSelect(ActionEvent event) {
+        String selectedInstanceName = instnse.getSelectionModel().getSelectedItem();
+
+        if (selectedInstanceName != null) {
+            Instance selectedInstance = instancesList.stream().filter(instance -> instance.getInstanceName().equals(selectedInstanceName)).findFirst().orElse(null);
+            
+            if (selectedInstance != null) {
+                String username = fldUser.getText().trim();
+                selectedInstance.getConfig().setUser(username);
+            }
+        }
+    }
+
+    @FXML
+    void onCreate(ActionEvent event) {
+        String instanceName = instnse.getEditor().getText().trim();
+
+        if (!instanceName.isEmpty()) {
+            // Проверяем, что объект с таким именем еще не создан
+            if (instancesList.stream().noneMatch(instance -> instance.getInstanceName().equals(instanceName))) {
+                Instance newInstance = new Instance(instanceName);
+                
+                // Заполняем переменные класса Config через instance_name
+                Config newConfig = new Config();
+                newConfig.setInstance_name(instanceName);
+                
+                // Добавляем новую конфигурацию в список instancesList
+                newInstance.setConfig(newConfig);
+                instancesList.add(newInstance);
+                
+                // Добавляем instanceName в ComboBox
+                instnse.getItems().add(instanceName);
+            } else {
+                // Обработка ошибки, если объект с таким именем уже существует
+                System.out.println("Объект с таким именем уже существует!");
+            }
+        } else {
+            // Обработка ошибки, если поле пустое
+            System.out.println("Поле пустое! Введите имя объекта.");
+        }
+    }
+
+    @FXML
+    void onDelete(ActionEvent event) {
+        String selectedInstanceName = instnse.getSelectionModel().getSelectedItem();
+
+        if (selectedInstanceName != null) {
+            Instance selectedInstance = instancesList.stream().filter(instance -> instance.getInstanceName().equals(selectedInstanceName)).findFirst().orElse(null);
+            
+            if (selectedInstance != null) {
+                instancesList.remove(selectedInstance);
+                instnse.getItems().remove(selectedInstanceName);
+                instnse.getSelectionModel().clearSelection();
+            }
+        } else {
+            // Обработка ошибки, если не выбран элемент для удаления
+            System.out.println("Выберите объект для удаления!");
+        }
+    }
+    @FXML
+    void onStart(ActionEvent event) {
+        String selectedInstanceName = instnse.getSelectionModel().getSelectedItem();
+
+        if (selectedInstanceName != null) {
+            Instance selectedInstance = instancesList.stream()
+                    .filter(instance -> instance.getInstanceName().equals(selectedInstanceName))
+                    .findFirst().orElse(null);
+
+            if (selectedInstance != null) {
+                String javaPath = fldJpath.getText().trim();
+                int memory = Integer.parseInt(fldMemory.getText().trim());
+                String server = fldServer.getText().trim();
+                String arguments = fldJarg.getText().trim();
+                String username = fldUser.getText().trim();
+
+                Config config = selectedInstance.getConfig();
+                config.setUser(username);
+                config.setJavaPath(javaPath);
+                config.setMemory(memory);
+                config.setServer(server);
+                config.setArguments(arguments);
+            }
+        }
+    }
 }
