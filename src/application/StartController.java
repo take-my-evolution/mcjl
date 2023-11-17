@@ -7,11 +7,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
-import application.Instance;
 
 
 public class StartController implements Initializable {
@@ -56,6 +57,7 @@ public class StartController implements Initializable {
     private ComboBox<String> instnse;
 
     private ObservableList<Instance> instancesList = FXCollections.observableArrayList();
+
     @FXML
     void Select(ActionEvent event) {
 
@@ -80,19 +82,13 @@ public class StartController implements Initializable {
                 }
             }
         });
-    }
-    @FXML
-    void onSelect(ActionEvent event) {
-        String selectedInstanceName = instnse.getSelectionModel().getSelectedItem();
 
-        if (selectedInstanceName != null) {
-            Instance selectedInstance = instancesList.stream().filter(instance -> instance.getInstanceName().equals(selectedInstanceName)).findFirst().orElse(null);
-            
-            if (selectedInstance != null) {
-                String username = fldUser.getText().trim();
-                selectedInstance.getConfig().setUser(username);
+        // Ограничение ввода только цифровых символов в поле fldMemory
+        fldMemory.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                fldMemory.setText(newValue.replaceAll("[^\\d]", ""));
             }
-        }
+        });
     }
 
     @FXML
@@ -116,11 +112,12 @@ public class StartController implements Initializable {
                 instnse.getItems().add(instanceName);
             } else {
                 // Обработка ошибки, если объект с таким именем уже существует
-                System.out.println("Объект с таким именем уже существует!");
+                showAlert("Ошибка", "Сборка с таким именем уже существует");
+          
             }
         } else {
             // Обработка ошибки, если поле пустое
-            System.out.println("Поле пустое! Введите имя объекта.");
+            showAlert("Ошибка", "Введите название сборки");
         }
     }
 
@@ -138,9 +135,10 @@ public class StartController implements Initializable {
             }
         } else {
             // Обработка ошибки, если не выбран элемент для удаления
-            System.out.println("Выберите объект для удаления!");
+            showAlert("Ошибка", "Выберите сборку для удаления!");
         }
     }
+
     @FXML
     void onStart(ActionEvent event) {
         String selectedInstanceName = instnse.getSelectionModel().getSelectedItem();
@@ -165,5 +163,16 @@ public class StartController implements Initializable {
                 config.setArguments(arguments);
             }
         }
+    }
+
+    
+       
+    // Всплывающее окно с сообщением
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }
