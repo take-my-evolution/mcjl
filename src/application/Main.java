@@ -24,16 +24,9 @@ public class Main extends Application {
 	}
 	
 	public static void main(String[] args) {
-		Config config = Config.deserialize("config.conf");
-		
-		if(config == null){
-			config = new Config();
-			config.serialize("config.conf");
-		}
-		//System.getProperty("java.home")
 		
 		
-		try{FolderCreator.create("minecraft");}
+		try{FolderCreator.create("configs");}
 		catch (Exception e)
 		{
 			if(e.getMessage() == "Не удалось создать папку.") {
@@ -49,8 +42,7 @@ public class Main extends Application {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
-		
+		 
 		launch(args);
 	}
 }

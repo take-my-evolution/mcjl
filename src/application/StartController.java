@@ -1,7 +1,12 @@
 package application;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
+
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 
 
 public class StartController implements Initializable {
@@ -45,7 +51,7 @@ public class StartController implements Initializable {
     private TextField fldJpath;
 
     @FXML
-    private TextField fldMemory;
+    private NumericTextField fldMemory = new NumericTextField();
 
     @FXML
     private TextField fldServer;
@@ -54,125 +60,81 @@ public class StartController implements Initializable {
     private TextField fldUser;
 
     @FXML
-    private ComboBox<String> instnse;
+    private ComboBox<Instance> instance = new ComboBox<>();
 
-    private ObservableList<Instance> instancesList = FXCollections.observableArrayList();
-
+    private String config_folder_path = "configs"; 
+    
     @FXML
-    void Select(ActionEvent event) {
-
+    void ComboBoxSelect(ActionEvent event) {
+    	 Instance selectedInstance = instance.getValue();
+    	 if (selectedInstance == null) return;
+    	 
+    	 fldUser.setText(selectedInstance.getUser());
+    	 fldMemory.setInt(selectedInstance.getMemory());
+    	 fldJpath.setText(selectedInstance.getJavaPath());
+    	 ///TODO допилять остальные поля.
     }
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ObservableList<String> list = FXCollections.observableArrayList();
-        instnse.setItems(list);
+    	File[] files = FileSearch.GetFiles(config_folder_path, ".conf");
+        if (files == null) return;
         
-        // Обновление значения полей fldUser, fldJpath, fldMemory, fldServer, fldJarg при изменении выбранного элемента в ComboBox
-        instnse.valueProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                Instance selectedInstance = instancesList.stream().filter(instance -> instance.getInstanceName().equals(newValue)).findFirst().orElse(null);
-                
-                if (selectedInstance != null) {
-                    fldUser.setText(selectedInstance.getConfig().getUser());
-                    fldJpath.setText(selectedInstance.getConfig().getJavaPath());
-                    fldMemory.setText(String.valueOf(selectedInstance.getConfig().getMemory()));
-                    fldServer.setText(selectedInstance.getConfig().getServer());
-                    fldJarg.setText(selectedInstance.getConfig().getArguments());
-                }
-            }
-        });
-
-        // Ограничение ввода только цифровых символов в поле fldMemory
-        fldMemory.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                fldMemory.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-        });
+		for (File file : files) {
+			Instance inst = Instance.deserialize(config_folder_path + "/" + file.getName());
+			instance.getItems().add(inst);
+		}
+		
+		///////////////////
+		 fldMemory.textProperty().addListener((observable, oldValue, newValue) -> {
+			 Instance selectedInstance = instance.getValue();
+	    	 if (selectedInstance == null) return;
+	    	 
+	    	 selectedInstance.setMemory(fldMemory.getInt());
+	    	 selectedInstance.serialize(config_folder_path + "/" + selectedInstance.getUUID() + ".conf");
+	        });
+		/////////////////////
+		 //TODO: Всех остальных дружков так же сделать.
+		
+		
     }
 
     @FXML
     void onCreate(ActionEvent event) {
-        String instanceName = instnse.getEditor().getText().trim();
+    	  TextInputDialog dialog = new TextInputDialog();
+          dialog.setTitle("Введите название сборки.");
+          dialog.setContentText("Название сборки:");
 
-        if (!instanceName.isEmpty()) {
-            // Проверяем, что объект с таким именем еще не создан
-            if (instancesList.stream().noneMatch(instance -> instance.getInstanceName().equals(instanceName))) {
-                Instance newInstance = new Instance(instanceName);
-                
-                // Заполняем переменные класса Config через instance_name
-                Config newConfig = new Config();
-                newConfig.setInstance_name(instanceName);
-                
-                // Добавляем новую конфигурацию в список instancesList
-                newInstance.setConfig(newConfig);
-                instancesList.add(newInstance);
-                
-                // Добавляем instanceName в ComboBox
-                instnse.getItems().add(instanceName);
-            } else {
-                // Обработка ошибки, если объект с таким именем уже существует
-                showAlert("Ошибка", "Сборка с таким именем уже существует");
+          Optional<String> result = dialog.showAndWait();
+          if (!result.isPresent()) return;
           
-            }
-        } else {
-            // Обработка ошибки, если поле пустое
-            showAlert("Ошибка", "Введите название сборки");
-        }
+          Instance new_born = new Instance(result.get());
+          instance.getItems().add(new_born);
+          new_born.serialize(config_folder_path + "/" + new_born.getUUID() + ".conf");
     }
 
     @FXML
     void onDelete(ActionEvent event) {
-        String selectedInstanceName = instnse.getSelectionModel().getSelectedItem();
+    	Instance value = instance.getValue();
+    	if(value == null) return;
 
-        if (selectedInstanceName != null) {
-            Instance selectedInstance = instancesList.stream().filter(instance -> instance.getInstanceName().equals(selectedInstanceName)).findFirst().orElse(null);
-            
-            if (selectedInstance != null) {
-                instancesList.remove(selectedInstance);
-                instnse.getItems().remove(selectedInstanceName);
-                instnse.getSelectionModel().clearSelection();
-            }
-        } else {
-            // Обработка ошибки, если не выбран элемент для удаления
-            showAlert("Ошибка", "Выберите сборку для удаления!");
-        }
+    	instance.getItems().remove(value);
+    	value.Delete();
     }
 
     @FXML
     void onStart(ActionEvent event) {
-        String selectedInstanceName = instnse.getSelectionModel().getSelectedItem();
-
-        if (selectedInstanceName != null) {
-            Instance selectedInstance = instancesList.stream()
-                    .filter(instance -> instance.getInstanceName().equals(selectedInstanceName))
-                    .findFirst().orElse(null);
-
-            if (selectedInstance != null) {
-                String javaPath = fldJpath.getText().trim();
-                int memory = Integer.parseInt(fldMemory.getText().trim());
-                String server = fldServer.getText().trim();
-                String arguments = fldJarg.getText().trim();
-                String username = fldUser.getText().trim();
-
-                Config config = selectedInstance.getConfig();
-                config.setUser(username);
-                config.setJavaPath(javaPath);
-                config.setMemory(memory);
-                config.setServer(server);
-                config.setArguments(arguments);
-            }
-        }
+    	if(!checkAllFields()) return;
+    	
+    	//startgame
+    	
     }
-
     
-       
-    // Всплывающее окно с сообщением
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    boolean checkAllFields()
+    {
+    	//TODO тут реализовать чекер который если что то не так подсвечивает все ошибочные поле красным и возвращает файлс если плохо и тру если ок
+    	
+    	return true;
     }
+        
 }

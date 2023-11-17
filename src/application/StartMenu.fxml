@@ -14,7 +14,7 @@
       <Button fx:id="btnStart" layoutX="450.0" layoutY="17.0" mnemonicParsing="false" onAction="#onStart" prefHeight="23.0" prefWidth="104.0" text="Start Game" />
       <ProgressBar fx:id="Validating" layoutX="353.0" layoutY="83.0" prefHeight="20.0" prefWidth="201.0" progress="0.0" />
       <Label layoutX="280.0" layoutY="84.0" text="Validation:" />
-      <ComboBox fx:id="instnse" accessibleRole="CONTEXT_MENU" editable="true" layoutX="92.0" layoutY="17.0" onAction="#Select" prefHeight="23.0" prefWidth="165.0" />
+      <ComboBox fx:id="instance" accessibleRole="CONTEXT_MENU" layoutX="92.0" layoutY="17.0" onAction="#ComboBoxSelect" prefHeight="23.0" prefWidth="165.0" />
       <Button fx:id="btnCreate" layoutX="21.0" layoutY="17.0" mnemonicParsing="false" onAction="#onCreate" text="Create " />
       <Button fx:id="btnDelete" layoutX="264.0" layoutY="17.0" mnemonicParsing="false" onAction="#onDelete" text="Delete" />
       <Label layoutX="21.0" layoutY="84.0" text="User name:" />
@@ -23,7 +23,7 @@
       <Label layoutX="21.0" layoutY="190.0" text="Arguments" />
       <Label layoutX="21.0" layoutY="223.0" text="Server:" />
       <TextField fx:id="fldUser" layoutX="102.0" layoutY="80.0" />
-      <TextField fx:id="fldMemory" layoutX="102.0" layoutY="114.0" />
+      <application.NumericTextField fx:id="fldMemory" layoutX="102.0" layoutY="114.0" />
       <TextField fx:id="fldJpath" layoutX="102.0" layoutY="147.0" />
       <TextField fx:id="fldJarg" layoutX="102.0" layoutY="185.0" />
       <TextField fx:id="fldServer" layoutX="102.0" layoutY="220.0" />
